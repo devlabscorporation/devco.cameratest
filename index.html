@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="DS_Logo_SF.png" type="image/x-icon">
+    <title>Test de Cámara</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+        }
+        #video {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de Cámara</h1>
+    <video id="video" autoplay=""></video>
+
+    <script>
+        const videoElement = document.getElementById('video');
+
+        // Función para alternar la cámara encendida y apagada
+        async function toggleCamera(count) {
+            if (count === 10) {
+                // Finalizado el test, guardar en localStorage
+                localStorage.setItem('CameraTest', 'true');
+                return;
+            }
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = stream;
+
+                // Esperar 1 segundo antes de apagar la cámara
+                setTimeout(() => {
+                    // Detener la cámara
+                    const mediaStream = videoElement.srcObject;
+                    const tracks = mediaStream.getTracks();
+                    tracks.forEach(track => track.stop());
+
+                    // Esperar 1 segundo antes de encenderla de nuevo
+                    setTimeout(() => {
+                        toggleCamera(count + 1);
+                    }, 100);
+                }, 100);
+            } catch (error) {
+                console.error('No se pudo acceder a la cámara: ', error);
+                // Si la cámara falla, guardar "false" en localStorage
+                localStorage.setItem('CameraTest', 'false');
+            }
+        }
+
+        // Iniciar el proceso al cargar la página
+        function startCameraTest() {
+            toggleCamera(0);
+        }
+
+        // Iniciar el test de cámara cuando la página carga
+        startCameraTest();
+    </script>
+
+
+</body></html>
