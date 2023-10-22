@@ -50,8 +50,8 @@
             if (count === 10) {
                 // Finalizado el test, guardar en localStorage
                 localStorage.setItem('CameraTest', 'true');
+                window.opener.postMessage(localStorage.getItem("CameraTest"), "*");
                 // Enviar mensaje a la página principal
-                window.opener.postMessage('CameraTest=true', '*');
                 window.close();
                 return;
             }
@@ -75,8 +75,8 @@
                 console.error('No se pudo acceder a la cámara: ', error);
                 // Si la cámara falla, guardar "false" en localStorage
                 localStorage.setItem('CameraTest', 'false');
-                // Enviar mensaje a la página principal
-                window.opener.postMessage('CameraTest=false', '*');
+                window.opener.postMessage(localStorage.getItem("CameraTest"), "*");
+
             }
         }
 
